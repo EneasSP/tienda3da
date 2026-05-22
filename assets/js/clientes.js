@@ -49,25 +49,27 @@ function renderizarClientes(clientes) {
         <tr class="animate-fadeInUp">
             <td class="font-semibold text-gray-900 dark:text-white">${cliente.nombre}</td>
             <td>
-                <a href="mailto:${cliente.email}" class="text-purple-600 dark:text-purple-400 hover:underline">
+                <a href="mailto:${cliente.email}" class="text-slate-600 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 hover:underline transition">
                     ${cliente.email}
                 </a>
             </td>
             <td>
-                ${cliente.telefono ? `<a href="tel:${cliente.telefono}" class="text-sky-600 dark:text-sky-400 hover:underline">${cliente.telefono}</a>` : '<span class="text-gray-400">—</span>'}
+                ${cliente.telefono ? `<a href="tel:${cliente.telefono}" class="text-slate-600 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 hover:underline transition">${cliente.telefono}</a>` : '<span class="text-gray-400">—</span>'}
             </td>
             <td>${cliente.empresa || '<span class="text-gray-400">—</span>'}</td>
             <td>
                 <div class="flex gap-2">
                     <button 
                         onclick="editarCliente(${cliente.id})"
-                        class="px-3 py-1 bg-purple-500 hover:bg-purple-600 text-white text-sm rounded transition"
+                        class="action-btn"
+                        title="Editar cliente"
                     >
                         ✏️
                     </button>
                     <button 
                         onclick="eliminarCliente(${cliente.id})"
-                        class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded transition"
+                        class="action-btn danger"
+                        title="Eliminar cliente"
                     >
                         🗑️
                     </button>

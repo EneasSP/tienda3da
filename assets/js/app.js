@@ -757,7 +757,7 @@ function renderizarProductos() {
         }
         
         return `
-            <div class="product-card flex flex-col h-full bg-slate-900/50 backdrop-blur-md border border-white/10 dark:bg-slate-950/40 rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-purple-500/30">
+            <div class="product-card flex flex-col h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-secondary-500/30">
                 ${imageHtml}
                 <div class="product-content p-5 flex flex-col flex-1">
                     <h4 class="product-name font-bold text-lg mb-2 text-gray-800 dark:text-gray-100">${escapeHtml(producto.nombre)}</h4>
@@ -772,7 +772,7 @@ function renderizarProductos() {
                     </div>
                     <div class="flex items-center justify-between mt-auto pt-2">
                         <span class="text-xs uppercase tracking-wider font-semibold text-gray-400 dark:text-gray-500">Precio Sugerido</span>
-                        <span class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">${formatCurrency(precioVenta)}</span>
+                        <span class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-amber-500 dark:from-amber-300 dark:to-amber-400">${formatCurrency(precioVenta)}</span>
                     </div>
                 </div>
             </div>

@@ -175,15 +175,15 @@
 .loading-spinner {
     width: 40px;
     height: 40px;
-    border: 3px solid rgba(139, 92, 246, 0.1);
-    border-top: 3px solid #8b5cf6;
+    border: 3px solid var(--color-border);
+    border-top: 3px solid var(--color-secondary);
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
 
 .dark .loading-spinner {
-    border-color: rgba(139, 92, 246, 0.2);
-    border-top-color: #a855f7;
+    border-color: var(--color-border);
+    border-top-color: var(--color-secondary);
 }
 
 /* =================================================================
@@ -206,7 +206,7 @@
     left: 0;
     width: 0;
     height: 2px;
-    background: linear-gradient(to right, #9333ea, #0ea5e9);
+    background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
     transition: width 0.3s ease;
 }
 
@@ -258,11 +258,11 @@
 }
 
 .pedidos-table tbody tr:hover {
-    background-color: rgba(139, 92, 246, 0.05);
+    background-color: var(--color-bg-hover);
 }
 
 .dark .pedidos-table tbody tr:hover {
-    background-color: rgba(139, 92, 246, 0.1);
+    background-color: var(--color-bg-hover);
 }
 
 /* =================================================================
@@ -295,9 +295,9 @@
 .dark .skeleton {
     background: linear-gradient(
         90deg,
-        #2a2a3e 25%,
-        #3a3a4e 50%,
-        #2a2a3e 75%
+        #1c212a 25%,
+        #222933 50%,
+        #1c212a 75%
     );
     background-size: 200% 100%;
     animation: shimmer 2s infinite;

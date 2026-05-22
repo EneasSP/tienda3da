@@ -72,12 +72,12 @@ function renderizarProductos(productos) {
     }
     
     container.innerHTML = productos.map(prod => `
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition border-l-4 border-purple-500 overflow-hidden">
+        <div class="product-card overflow-hidden">
             ${prod.ruta_imagen ? `
-                <img src="${prod.ruta_imagen}" alt="${prod.nombre}" class="w-full h-48 object-cover">
+                <img src="${prod.ruta_imagen}" alt="${prod.nombre}" class="product-image">
             ` : `
-                <div class="w-full h-48 bg-gradient-to-br from-purple-200 to-sky-200 dark:from-purple-900 dark:to-sky-900 flex items-center justify-center">
-                    <span class="text-5xl">🏭</span>
+                <div class="product-placeholder">
+                    <span>🏭</span>
                 </div>
             `}
             
@@ -86,21 +86,21 @@ function renderizarProductos(productos) {
                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">${prod.descripcion || 'Sin descripción'}</p>
                 
                 <div class="grid grid-cols-2 gap-2 mb-4 text-sm">
-                    <div class="bg-purple-100 dark:bg-purple-900/30 p-2 rounded">
+                    <div class="bg-slate-100 dark:bg-slate-800/40 p-2 rounded">
                         <div class="text-xs text-gray-600 dark:text-gray-400">Peso</div>
-                        <div class="font-mono font-bold text-purple-700 dark:text-purple-300">${prod.peso_gramos}g</div>
+                        <div class="font-mono font-bold text-slate-800 dark:text-slate-200">${prod.peso_gramos}g</div>
                     </div>
-                    <div class="bg-sky-100 dark:bg-sky-900/30 p-2 rounded">
+                    <div class="bg-slate-100 dark:bg-slate-800/40 p-2 rounded">
                         <div class="text-xs text-gray-600 dark:text-gray-400">Tiempo</div>
-                        <div class="font-mono font-bold text-sky-700 dark:text-sky-300">${prod.tiempo_minutos}m</div>
+                        <div class="font-mono font-bold text-slate-800 dark:text-slate-200">${prod.tiempo_minutos}m</div>
                     </div>
                 </div>
                 
                 <div class="flex gap-2">
-                    <button onclick="editarProducto(${prod.id})" class="flex-1 px-3 py-2 bg-purple-500 hover:bg-purple-600 text-white text-sm rounded transition">
+                    <button onclick="editarProducto(${prod.id})" class="flex-1 px-3 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-850 dark:hover:bg-slate-750 text-slate-800 dark:text-slate-200 text-sm font-semibold rounded transition">
                         ✏️ Editar
                     </button>
-                    <button onclick="eliminarProducto(${prod.id})" class="flex-1 px-3 py-2 bg-red-500 hover:bg-red-600 text-white text-sm rounded transition">
+                    <button onclick="eliminarProducto(${prod.id})" class="flex-1 px-3 py-2 bg-red-50 hover:bg-red-100 dark:bg-red-950/20 dark:hover:bg-red-950/40 text-red-600 dark:text-red-400 text-sm font-semibold rounded transition">
                         🗑️ Eliminar
                     </button>
                 </div>

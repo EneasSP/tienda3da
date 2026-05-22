@@ -14,10 +14,10 @@
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts - Inter -->
+    <!-- Google Fonts - Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Configuración de Tailwind para Dark Mode -->
     <script>
@@ -26,32 +26,32 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
                     },
                     colors: {
                         primary: {
-                            50: '#faf5ff',
-                            100: '#f3e8ff',
-                            200: '#e9d5ff',
-                            300: '#d8b4fe',
-                            400: '#c084fc',
-                            500: '#a855f7',
-                            600: '#9333ea',
-                            700: '#7e22ce',
-                            800: '#6b21a8',
-                            900: '#581c87',
+                            50: '#f1f5f9',
+                            100: '#e2e8f0',
+                            200: '#cbd5e1',
+                            300: '#94a3b8',
+                            400: '#64748b',
+                            500: '#475569',
+                            600: '#334155',
+                            700: '#1e2530',
+                            800: '#0f131a',
+                            900: '#0a0c10',
                         },
                         secondary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            200: '#bae6fd',
-                            300: '#7dd3fc',
-                            400: '#38bdf8',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c3d66',
+                            50: '#fdfbf7',
+                            100: '#f5ede0',
+                            200: '#ebdcc5',
+                            300: '#e2c9a6',
+                            400: '#d8b787',
+                            500: '#c5a880',
+                            600: '#a88c64',
+                            700: '#8b714b',
+                            800: '#6f5734',
+                            900: '#543f20',
                         }
                     }
                 }
@@ -90,7 +90,7 @@
             >
             <button 
                 onclick="abrirModalCliente()" 
-                class="px-6 py-2 bg-gradient-to-r from-purple-600 to-sky-600 hover:from-purple-700 hover:to-sky-700 text-white font-semibold rounded-lg transition"
+                class="btn btn-primary"
             >
                 ➕ Nuevo Cliente
             </button>
@@ -181,14 +181,14 @@
                 <div class="flex gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                     <button 
                         type="submit" 
-                        class="flex-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-sky-600 hover:from-purple-700 hover:to-sky-700 text-white font-semibold rounded-lg transition"
+                        class="flex-1 btn btn-primary"
                     >
                         💾 Guardar
                     </button>
                     <button 
                         type="button"
                         onclick="cerrarModalCliente()"
-                        class="flex-1 px-4 py-2 bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg transition"
+                        class="flex-1 btn btn-secondary"
                     >
                         Cancelar
                     </button>
