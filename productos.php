@@ -67,7 +67,7 @@
     <link rel="stylesheet" href="assets/css/animations.css">
     <link rel="stylesheet" href="assets/css/cruds.css">
 </head>
-<body class="bg-gray-50 dark:bg-gray-900">
+<body class="min-h-screen">
     <?php include 'includes/navbar.php'; ?>
     
     <div class="container mx-auto p-4 md:p-8">
@@ -86,7 +86,7 @@
                 type="text" 
                 id="searchProducto" 
                 placeholder="Buscar producto..." 
-                class="flex-1 px-4 py-2 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                class="flex-1 form-input"
             >
             <button 
                 onclick="abrirModalProducto()" 
@@ -106,8 +106,8 @@
 
     <!-- MODAL PRODUCTO -->
     <div id="modalProducto" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div class="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-6 flex justify-between items-center">
+        <div class="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="sticky top-0 bg-[var(--color-bg-card)] border-b border-[var(--color-border)] p-6 flex justify-between items-center">
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white" id="modalProductoTitulo">
                     Nuevo Producto
                 </h2>
@@ -120,31 +120,31 @@
                 <input type="hidden" id="productoId">
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label class="form-label">
                         Nombre del Producto *
                     </label>
                     <input 
                         type="text" 
                         id="productoNombre" 
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        class="form-input"
                         required
                     >
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label class="form-label">
                         Descripción
                     </label>
                     <textarea 
                         id="productoDescripcion" 
                         rows="3"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        class="form-input"
                     ></textarea>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        <label class="form-label">
                             Peso (gramos) *
                         </label>
                         <input 
@@ -152,14 +152,14 @@
                             id="productoPeso" 
                             step="0.01"
                             min="0.1"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            class="form-input"
                             required
                             onchange="recalcularCosto()"
                         >
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        <label class="form-label">
                             Tiempo (minutos) *
                         </label>
                         <input 
@@ -167,7 +167,7 @@
                             id="productoTiempo" 
                             step="1"
                             min="1"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            class="form-input"
                             required
                             onchange="recalcularCosto()"
                         >
@@ -213,18 +213,18 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label class="form-label">
                         Imagen (URL)
                     </label>
                     <input 
                         type="text" 
                         id="productoImagen" 
                         placeholder="https://ejemplo.com/imagen.jpg"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        class="form-input"
                     >
                 </div>
 
-                <div class="flex gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div class="flex gap-4 pt-4 border-t border-[var(--color-border)]">
                     <button 
                         type="submit" 
                         class="flex-1 btn btn-primary"
