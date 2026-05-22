@@ -170,38 +170,6 @@ function createToastContainer() {
     return container;
 }
 
-/* =================================================================
-   GESTIÓN DE DARK MODE
-   ================================================================= */
-
-/**
- * Inicializa el tema oscuro desde localStorage
- */
-function initDarkMode() {
-    const stored = localStorage.getItem(CONFIG.DARK_MODE_KEY);
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const isDark = stored === 'true' || (!stored && prefersDark);
-    
-    if (isDark) {
-        document.documentElement.classList.add('dark');
-        const toggle = document.getElementById('dark-mode-toggle');
-        if (toggle) toggle.classList.add('active');
-    }
-}
-
-/**
- * Alterna el modo oscuro
- */
-function toggleDarkMode() {
-    const html = document.documentElement;
-    const toggle = document.getElementById('dark-mode-toggle');
-    
-    html.classList.toggle('dark');
-    const isDark = html.classList.contains('dark');
-    
-    if (toggle) toggle.classList.toggle('active', isDark);
-    localStorage.setItem(CONFIG.DARK_MODE_KEY, isDark.toString());
-}
 
 /* =================================================================
    GESTIÓN DE TABS
@@ -537,47 +505,68 @@ async function calcularCostosPedido() {
     }
     
     const params = AppState.parametros;
-    const precioPlaKg = params.precio_pla_kg?.valor || 45;
-    const costoLuzKwh = params.costo_luz_kwh?.valor || 15;
-    const gananciaPorcentaje = params.ganancia_porcentaje?.valor || 50;
+    const precioPlaKg = parseFloat(params.precio_pla_kg?.valor ?? 45);
+    const costoLuzKwh = parseFloat(params.costo_luz_kwh?.valor ?? 15);
+    const horaMaquina = parseFloat(params.hora_maquina?.valor ?? 150);
+    const gananciaPorcentaje = parseFloat(params.ganancia_porcentaje?.valor ?? 50);
     
     let totalCostoMaterial = 0;
     let totalCostoEnergia = 0;
+    let totalCostoMaquina = 0;
+    let totalCostoProduccion = 0;
     let subtotal = 0;
     
     detalles.forEach(detalle => {
         const productoId = detalle.dataset.productoId;
         const producto = AppState.productos.find(p => p.id == productoId);
-        const cantidad = parseInt(detalle.querySelector('span:nth-child(2)').textContent.replace('Cantidad: ', ''));
         
-        const pesoTotal = (producto.peso_gramos * cantidad) / 1000;
-        const tiempoTotal = (producto.tiempo_minutos * cantidad) / 60;
+        // Extraer cantidad de forma segura
+        const cantidadText = detalle.querySelector('span:nth-child(2)').textContent;
+        const cantidad = parseInt(cantidadText.replace(/[^\d]/g, '')) || 1;
         
-        totalCostoMaterial += pesoTotal * precioPlaKg;
-        totalCostoEnergia += tiempoTotal * costoLuzKwh;
-        subtotal += (totalCostoMaterial + totalCostoEnergia) * (1 + gananciaPorcentaje / 100);
+        const pesoTotalKg = (producto.peso_gramos / 1000) * cantidad;
+        const tiempoTotalHoras = (producto.tiempo_minutos / 60) * cantidad;
+        
+        const costoPLA = pesoTotalKg * precioPlaKg;
+        const costoLuz = tiempoTotalHoras * (costoLuzKwh * 3 / 60);
+        const costoMaq = tiempoTotalHoras * horaMaquina;
+        
+        const costoProdItem = costoPLA + costoLuz + costoMaq;
+        const precioVentaItem = costoProdItem * (1 + (gananciaPorcentaje / 100));
+        
+        totalCostoMaterial += costoPLA;
+        totalCostoEnergia += costoLuz;
+        totalCostoMaquina += costoMaq;
+        totalCostoProduccion += costoProdItem;
+        subtotal += precioVentaItem;
     });
-    
-    const total = subtotal;
     
     if (summaryContainer) {
         summaryContainer.innerHTML = `
-            <div class="cost-summary">
-                <div class="cost-row">
-                    <span class="cost-label">Costo Material:</span>
-                    <span class="cost-value">${formatCurrency(totalCostoMaterial)}</span>
+            <div class="costo-box mt-4">
+                <div class="costo-item">
+                    <span class="costo-item-label">Costo Material (PLA):</span>
+                    <span class="costo-item-valor">${formatCurrency(totalCostoMaterial)}</span>
                 </div>
-                <div class="cost-row">
-                    <span class="cost-label">Costo Energía:</span>
-                    <span class="cost-value">${formatCurrency(totalCostoEnergia)}</span>
+                <div class="costo-item">
+                    <span class="costo-item-label">Costo Energía:</span>
+                    <span class="costo-item-valor">${formatCurrency(totalCostoEnergia)}</span>
                 </div>
-                <div class="cost-row">
-                    <span class="cost-label">Ganancia (${gananciaPorcentaje}%):</span>
-                    <span class="cost-value">${formatCurrency(subtotal - totalCostoMaterial - totalCostoEnergia)}</span>
+                <div class="costo-item">
+                    <span class="costo-item-label">Costo Amortización Máquina:</span>
+                    <span class="costo-item-valor">${formatCurrency(totalCostoMaquina)}</span>
                 </div>
-                <div class="cost-row cost-total">
-                    <span class="cost-label">Total:</span>
-                    <span class="cost-value">${formatCurrency(total)}</span>
+                <div class="costo-item">
+                    <span class="costo-item-label">Costo de Producción Total:</span>
+                    <span class="costo-item-valor">${formatCurrency(totalCostoProduccion)}</span>
+                </div>
+                <div class="costo-item border-b-0 pb-0">
+                    <span class="costo-item-label">Ganancia (${gananciaPorcentaje}%):</span>
+                    <span class="costo-item-valor">${formatCurrency(subtotal - totalCostoProduccion)}</span>
+                </div>
+                <div class="costo-precio text-lg font-bold">
+                    <span>Total Pedido:</span>
+                    <span>${formatCurrency(subtotal)}</span>
                 </div>
             </div>
         `;
@@ -706,6 +695,14 @@ async function eliminarPedido(pedidoId) {
  */
 async function cargarProductos() {
     try {
+        // Cargar parámetros primero si no están cargados
+        if (Object.keys(AppState.parametros).length === 0) {
+            const paramsResponse = await apiRequest('parametros.php');
+            if (paramsResponse.success) {
+                AppState.parametros = paramsResponse.data;
+            }
+        }
+        
         const response = await apiRequest('productos.php');
         if (response.success) {
             AppState.productos = response.data;
@@ -725,28 +722,62 @@ function renderizarProductos() {
     
     if (AppState.productos.length === 0) {
         container.innerHTML = `
-            <div class="empty-state" style="grid-column: 1 / -1;">
-                <div class="empty-icon">📦</div>
-                <h3 class="empty-title">No hay productos</h3>
-                <p class="empty-description">Agrega productos desde la configuración</p>
+            <div class="empty-state col-span-full py-12 text-center">
+                <div class="empty-icon text-5xl mb-3">📦</div>
+                <h3 class="empty-title text-xl font-semibold mb-1 text-gray-800 dark:text-gray-100">No hay productos</h3>
+                <p class="empty-description text-gray-500 dark:text-gray-400">El catálogo está vacío actualmente.</p>
             </div>
         `;
         return;
     }
     
-    container.innerHTML = AppState.productos.map(producto => `
-        <div class="product-card">
-            <div class="product-image">🖨️</div>
-            <div class="product-content">
-                <h4 class="product-name">${escapeHtml(producto.nombre)}</h4>
-                <p class="product-description">${escapeHtml(producto.descripcion || 'Sin descripción')}</p>
-                <div class="product-meta">
-                    <span>⚖️ ${producto.peso_gramos}g</span>
-                    <span>⏱️ ${producto.tiempo_minutos}min</span>
+    const params = AppState.parametros;
+    const precioPlaKg = parseFloat(params.precio_pla_kg?.valor ?? 45);
+    const costoLuzKwh = parseFloat(params.costo_luz_kwh?.valor ?? 15);
+    const horaMaquina = parseFloat(params.hora_maquina?.valor ?? 150);
+    const gananciaPorcentaje = parseFloat(params.ganancia_porcentaje?.valor ?? 50);
+    
+    container.innerHTML = AppState.productos.map(producto => {
+        const pesoKg = producto.peso_gramos / 1000;
+        const tiempoHoras = producto.tiempo_minutos / 60;
+        
+        const costoPLA = pesoKg * precioPlaKg;
+        const costoLuz = tiempoHoras * (costoLuzKwh * 3 / 60);
+        const costoMaq = tiempoHoras * horaMaquina;
+        
+        const costoUnitario = costoPLA + costoLuz + costoMaq;
+        const precioVenta = costoUnitario * (1 + (gananciaPorcentaje / 100));
+        
+        // Lógica de imagen: mostrar imagen o un gradiente premium de marcador de posición
+        let imageHtml = '';
+        if (producto.ruta_imagen && producto.ruta_imagen.trim() !== '') {
+            imageHtml = `<img src="${escapeHtml(producto.ruta_imagen)}" alt="${escapeHtml(producto.nombre)}" class="product-image">`;
+        } else {
+            imageHtml = `<div class="product-placeholder text-4xl">🖨️</div>`;
+        }
+        
+        return `
+            <div class="product-card flex flex-col h-full bg-slate-900/50 backdrop-blur-md border border-white/10 dark:bg-slate-950/40 rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-purple-500/30">
+                ${imageHtml}
+                <div class="product-content p-5 flex flex-col flex-1">
+                    <h4 class="product-name font-bold text-lg mb-2 text-gray-800 dark:text-gray-100">${escapeHtml(producto.nombre)}</h4>
+                    <p class="product-description text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-3 flex-1">${escapeHtml(producto.descripcion || 'Sin descripción')}</p>
+                    <div class="product-meta grid grid-cols-2 gap-2 text-xs font-medium text-gray-400 dark:text-gray-500 border-t border-b border-gray-100/10 dark:border-gray-800 py-3 mb-4">
+                        <div class="flex items-center gap-1.5 justify-center py-1 bg-slate-500/5 dark:bg-white/5 rounded-md">
+                            <span>⚖️</span> <span>${producto.peso_gramos} g</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 justify-center py-1 bg-slate-500/5 dark:bg-white/5 rounded-md">
+                            <span>⏱️</span> <span>${producto.tiempo_minutos} min</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between mt-auto pt-2">
+                        <span class="text-xs uppercase tracking-wider font-semibold text-gray-400 dark:text-gray-500">Precio Sugerido</span>
+                        <span class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">${formatCurrency(precioVenta)}</span>
+                    </div>
                 </div>
             </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 /* =================================================================
@@ -858,39 +889,6 @@ function setActiveNavFromLocation() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Inicializar tema oscuro
-    initDarkMode();
-    
-    // Configurar hamburger menu
-    const hamburgerMenu = document.getElementById('hamburger-menu');
-    const navTabs = document.getElementById('nav-tabs');
-    
-    if (hamburgerMenu && navTabs) {
-        hamburgerMenu.addEventListener('click', () => {
-            hamburgerMenu.classList.toggle('active');
-            navTabs.classList.toggle('active');
-        });
-        
-        // Cerrar menú al hacer clic en un tab
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                hamburgerMenu.classList.remove('active');
-                navTabs.classList.remove('active');
-            });
-        });
-    }
-    
-    // Configurar toggle de dark mode
-    const darkModeToggle = document.getElementById('dark-mode-toggle');
-    if (darkModeToggle) {
-        darkModeToggle.addEventListener('click', toggleDarkMode);
-    }
-    
-    // Configurar tabs de navegación
-    document.querySelectorAll('.nav-tab').forEach(tab => {
-        tab.addEventListener('click', () => switchTab(tab.dataset.tab));
-    });
-    
     // Configurar filtros de estado
     document.querySelectorAll('.filter-tab').forEach(tab => {
         tab.addEventListener('click', () => filtrarPedidos(tab.dataset.filtro));
@@ -936,6 +934,7 @@ document.addEventListener('DOMContentLoaded', function() {
         guardarPedidoBtn.addEventListener('click', guardarPedido);
     }
     
-    // Cargar datos iniciales
-    cargarPedidos();
+    // Cargar datos iniciales según la pestaña activa en la URL
+    const initialTab = typeof getTabFromUrl === 'function' ? getTabFromUrl() : 'pedidos';
+    switchTab(initialTab);
 });

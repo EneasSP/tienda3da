@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 async function cargarParametros() {
     try {
-        const response = await fetch('../api/parametros.php');
+        const response = await fetch('api/parametros.php');
         const data = await response.json();
         
         if (data.success) {
@@ -43,7 +43,7 @@ async function cargarParametros() {
  */
 async function cargarProductos() {
     try {
-        const response = await fetch('../api/productos.php');
+        const response = await fetch('api/productos.php');
         const data = await response.json();
         
         if (data.success) {
@@ -166,7 +166,7 @@ async function guardarProducto(event) {
     
     const id = document.getElementById('productoId').value;
     const metodo = id ? 'PUT' : 'POST';
-    const url = id ? `../api/productos.php?id=${id}` : '../api/productos.php';
+    const url = id ? `api/productos.php?id=${id}` : 'api/productos.php';
     
     const data = {
         nombre: document.getElementById('productoNombre').value,
@@ -204,7 +204,7 @@ async function eliminarProducto(id) {
     if (!confirm('¿Confirmas que deseas eliminar este producto?')) return;
     
     try {
-        const response = await fetch(`../api/productos.php?id=${id}`, {
+        const response = await fetch(`api/productos.php?id=${id}`, {
             method: 'DELETE'
         });
         
@@ -239,7 +239,7 @@ async function recalcularCosto() {
     }
     
     try {
-        const response = await fetch(`../api/costo.php?peso=${peso}&tiempo=${tiempo}`);
+        const response = await fetch(`api/costo.php?peso=${peso}&tiempo=${tiempo}`);
         const data = await response.json();
         
         if (data.success) {

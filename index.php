@@ -56,6 +56,7 @@
     
     <!-- Estilos personalizados -->
     <link rel="stylesheet" href="assets/css/custom.css">
+    <link rel="stylesheet" href="assets/css/cruds.css">
     <link rel="stylesheet" href="assets/css/animations.css">
     
     <!-- JS Común (Modo oscuro y navegación) -->
@@ -167,7 +168,7 @@
                     <h2 class="section-title">📦 Catálogo de Productos</h2>
                 </div>
                 
-                <div id="catalog-grid" class="catalog-grid p-6">
+                <div id="catalog-grid" class="grid-productos p-6">
                     <div class="text-center py-8 col-span-full">
                         <div class="loading-spinner mx-auto"></div>
                         <p class="mt-2 text-sm text-gray-500">Cargando productos...</p>

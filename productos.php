@@ -10,7 +10,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Productos - tienda3d</title>
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Configuración de Tailwind para Dark Mode -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#faf5ff',
+                            100: '#f3e8ff',
+                            200: '#e9d5ff',
+                            300: '#d8b4fe',
+                            400: '#c084fc',
+                            500: '#a855f7',
+                            600: '#9333ea',
+                            700: '#7e22ce',
+                            800: '#6b21a8',
+                            900: '#581c87',
+                        },
+                        secondary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c3d66',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- JS Común (Modo oscuro y navegación) -->
     <script src="assets/js/common.js"></script>
+    
+    <!-- Estilos personalizados -->
     <link rel="stylesheet" href="assets/css/custom.css">
     <link rel="stylesheet" href="assets/css/animations.css">
     <link rel="stylesheet" href="assets/css/cruds.css">
@@ -192,21 +244,5 @@
     </div>
 
     <script src="assets/js/productos.js"></script>
-    <script>
-        // Simple dark mode toggle (sin cargar app.js)
-        document.addEventListener('DOMContentLoaded', () => {
-            const key = 'tienda3d-dark-mode';
-            const toggle = document.getElementById('dark-mode-toggle-simple');
-            
-            if (toggle) {
-                toggle.addEventListener('click', () => {
-                    const html = document.documentElement;
-                    html.classList.toggle('dark');
-                    const isDark = html.classList.contains('dark');
-                    localStorage.setItem(key, isDark.toString());
-                });
-            }
-        });
-    </script>
 </body>
 </html>

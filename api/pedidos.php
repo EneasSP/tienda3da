@@ -165,8 +165,6 @@ function obtenerPedidos($pdo, $id, $search, $estado, $mostrar_finalizados) {
  * @return array Métricas calculadas
  */
 function calcularMetricas($pdo, $mostrar_finalizados) {
-    $whereClause = $mostrar_finalizados ? "" : " WHERE estado != 'finalizado'";
-    
     // Total facturado (solo pedidos aprobados o finalizados)
     $stmtTotal = $pdo->query("
         SELECT COALESCE(SUM(total), 0) AS total_facturado
@@ -177,30 +175,18 @@ function calcularMetricas($pdo, $mostrar_finalizados) {
     
     // Costo de producción (suma de costos de productos en pedidos)
     $stmtCosto = $pdo->query("
-        SELECT COALESCE(SUM(
-            (dp.cantidad * pr.peso_gramos / 1000) * pa.valor +  -- Costo de material
-            (dp.cantidad * dp.tiempo_minutos / 60) * pb.valor  -- Costo de energía
-        ), 0) AS costo_produccion
+        SELECT COALESCE(SUM(dp.cantidad * dp.costo_unitario), 0) AS costo_produccion
         FROM detalles_pedido dp
-        LEFT JOIN productos pr ON dp.producto_id = pr.id
         LEFT JOIN pedidos p ON dp.pedido_id = p.id
-        LEFT JOIN parametros pa ON pa.clave = 'precio_pla_kg'
-        LEFT JOIN parametros pb ON pb.clave = 'costo_luz_kwh'
         WHERE p.estado IN ('aprobado', 'finalizado')
     ");
     $costoProduccion = (float)$stmtCosto->fetch()['costo_produccion'];
     
     // Ganancia neta
     $stmtGanancia = $pdo->query("
-        SELECT COALESCE(SUM(
-            dp.precio_unitario * dp.cantidad - 
-            ((dp.cantidad * pr.peso_gramos / 1000) * pa.valor + (dp.cantidad * dp.tiempo_minutos / 60) * pb.valor)
-        ), 0) AS ganancia_neta
+        SELECT COALESCE(SUM(dp.cantidad * (dp.precio_unitario - dp.costo_unitario)), 0) AS ganancia_neta
         FROM detalles_pedido dp
-        LEFT JOIN productos pr ON dp.producto_id = pr.id
         LEFT JOIN pedidos p ON dp.pedido_id = p.id
-        LEFT JOIN parametros pa ON pa.clave = 'precio_pla_kg'
-        LEFT JOIN parametros pb ON pb.clave = 'costo_luz_kwh'
         WHERE p.estado IN ('aprobado', 'finalizado')
     ");
     $gananciaNeta = (float)$stmtGanancia->fetch()['ganancia_neta'];
@@ -253,15 +239,16 @@ function crearPedido($pdo) {
             }
             
             $cantidad = (int)$producto['cantidad'];
-            $pesoTotal = ($prod['peso_gramos'] * $cantidad) / 1000; // Convertir a kg
-            $tiempoTotal = ($prod['tiempo_minutos'] * $cantidad) / 60; // Convertir a horas
             
-            // Calcular costo de material y energía
-            $costoMaterial = $pesoTotal * $parametros['precio_pla_kg'];
-            $costoEnergia = $tiempoTotal * $parametros['costo_luz_kwh'];
-            $costoUnitario = $costoMaterial + $costoEnergia;
+            // Calculamos costos unitarios (para 1 unidad)
+            $pesoKgUnitario = $prod['peso_gramos'] / 1000;
+            $tiempoHorasUnitario = $prod['tiempo_minutos'] / 60;
             
-            // Aplicar margen de ganancia
+            $costoPLA = $pesoKgUnitario * $parametros['precio_pla_kg'];
+            $costoLuz = $tiempoHorasUnitario * ($parametros['costo_luz_kwh'] * 3 / 60);
+            $costoMaquina = $tiempoHorasUnitario * $parametros['hora_maquina'];
+            
+            $costoUnitario = $costoPLA + $costoLuz + $costoMaquina;
             $precioUnitario = $costoUnitario * (1 + ($parametros['ganancia_porcentaje'] / 100));
             
             $detalles[] = [
@@ -306,7 +293,7 @@ function crearPedido($pdo) {
                 'cantidad' => $detalle['cantidad'],
                 'costo_unitario' => $detalle['costo_unitario'],
                 'precio_unitario' => $detalle['precio_unitario'],
-                'tiempo_minutos' => $detalle['tiempo_minutos']
+                'tiempo_minutos' => $detalle['tiempo_minutos'] * $detalle['cantidad']
             ]);
         }
         
