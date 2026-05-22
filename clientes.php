@@ -30,28 +30,30 @@
                     },
                     colors: {
                         primary: {
-                            50: '#f1f5f9',
-                            100: '#e2e8f0',
-                            200: '#cbd5e1',
-                            300: '#94a3b8',
-                            400: '#64748b',
-                            500: '#475569',
-                            600: '#334155',
-                            700: '#1e2530',
-                            800: '#0f131a',
-                            900: '#0a0c10',
+                            50: 'var(--color-primary-50)',
+                            100: 'var(--color-primary-100)',
+                            200: 'var(--color-primary-200)',
+                            300: 'var(--color-primary-300)',
+                            400: 'var(--color-primary-400)',
+                            500: 'var(--color-primary)',
+                            600: 'var(--color-primary-600)',
+                            700: 'var(--color-primary-700)',
+                            800: 'var(--color-primary-800)',
+                            900: 'var(--color-primary-900)',
+                            DEFAULT: 'var(--color-primary)',
                         },
                         secondary: {
-                            50: '#fdfbf7',
-                            100: '#f5ede0',
-                            200: '#ebdcc5',
-                            300: '#e2c9a6',
-                            400: '#d8b787',
-                            500: '#c5a880',
-                            600: '#a88c64',
-                            700: '#8b714b',
-                            800: '#6f5734',
-                            900: '#543f20',
+                            50: 'var(--color-secondary-50)',
+                            100: 'var(--color-secondary-100)',
+                            200: 'var(--color-secondary-200)',
+                            300: 'var(--color-secondary-300)',
+                            400: 'var(--color-secondary-400)',
+                            500: 'var(--color-secondary)',
+                            600: 'var(--color-secondary-600)',
+                            700: 'var(--color-secondary-700)',
+                            800: 'var(--color-secondary-800)',
+                            900: 'var(--color-secondary-900)',
+                            DEFAULT: 'var(--color-secondary)',
                         }
                     }
                 }
@@ -70,12 +72,12 @@
 <body class="min-h-screen">
     <?php include 'includes/navbar.php'; ?>
     
-    <div class="container mx-auto p-4 md:p-8">
+    <main class="main-container">
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            <h1 class="page-title">
                 👥 Gestión de Clientes
             </h1>
-            <p class="text-gray-600 dark:text-gray-400">
+            <p class="body-text">
                 Administra la cartera de clientes
             </p>
         </div>
@@ -116,70 +118,72 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    </main>
 
     <!-- MODAL CLIENTE -->
-    <div id="modalCliente" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div class="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg shadow-xl max-w-2xl w-full">
-            <div class="border-b border-[var(--color-border)] p-6 flex justify-between items-center">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white" id="modalClienteTitulo">
+    <div id="modalCliente" class="modal-backdrop hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalClienteTitulo">
                     Nuevo Cliente
                 </h2>
-                <button onclick="cerrarModalCliente()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400">
+                <button onclick="cerrarModalCliente()" class="modal-close">
                     ✕
                 </button>
             </div>
 
-            <form id="formCliente" class="p-6 space-y-4" onsubmit="guardarCliente(event)">
-                <input type="hidden" id="clienteId">
+            <form id="formCliente" onsubmit="guardarCliente(event)">
+                <div class="modal-body">
+                    <input type="hidden" id="clienteId">
 
-                <div>
-                    <label class="form-label">
-                        Nombre Completo *
-                    </label>
-                    <input 
-                        type="text" 
-                        id="clienteNombre" 
-                        class="form-input"
-                        required
-                    >
+                    <div class="form-group">
+                        <label class="form-label">
+                            Nombre Completo *
+                        </label>
+                        <input 
+                            type="text" 
+                            id="clienteNombre" 
+                            class="form-input"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Email *
+                        </label>
+                        <input 
+                            type="email" 
+                            id="clienteEmail" 
+                            class="form-input"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Teléfono
+                        </label>
+                        <input 
+                            type="tel" 
+                            id="clienteTelefono" 
+                            class="form-input"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Empresa
+                        </label>
+                        <input 
+                            type="text" 
+                            id="clienteEmpresa" 
+                            class="form-input"
+                        >
+                    </div>
                 </div>
 
-                <div>
-                    <label class="form-label">
-                        Email *
-                    </label>
-                    <input 
-                        type="email" 
-                        id="clienteEmail" 
-                        class="form-input"
-                        required
-                    >
-                </div>
-
-                <div>
-                    <label class="form-label">
-                        Teléfono
-                    </label>
-                    <input 
-                        type="tel" 
-                        id="clienteTelefono" 
-                        class="form-input"
-                    >
-                </div>
-
-                <div>
-                    <label class="form-label">
-                        Empresa
-                    </label>
-                    <input 
-                        type="text" 
-                        id="clienteEmpresa" 
-                        class="form-input"
-                    >
-                </div>
-
-                <div class="flex gap-4 pt-4 border-t border-[var(--color-border)]">
+                <div class="modal-footer">
                     <button 
                         type="submit" 
                         class="flex-1 btn btn-primary"

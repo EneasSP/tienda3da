@@ -11,6 +11,7 @@
     background-color: var(--color-primary);
     color: var(--color-text-inverse);
     font-weight: 600;
+    font-size: var(--text-body);
     border-radius: var(--radius-md, 0.5rem);
     border: 1px solid transparent;
     cursor: pointer;
@@ -37,6 +38,7 @@
     background-color: var(--color-bg-hover, #64748b);
     color: var(--color-text);
     font-weight: 600;
+    font-size: var(--text-body);
     border-radius: var(--radius-md, 0.5rem);
     border: 1px solid var(--color-border);
     cursor: pointer;
@@ -56,6 +58,7 @@
     background-color: var(--color-error, #ef4444);
     color: white;
     font-weight: 600;
+    font-size: var(--text-body);
     border-radius: var(--radius-md, 0.5rem);
     border: none;
     cursor: pointer;
@@ -86,7 +89,7 @@
     padding: 0.75rem 1rem;
     text-align: left;
     font-weight: 600;
-    font-size: 0.875rem;
+    font-size: var(--text-small);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--color-text-secondary);
@@ -96,7 +99,7 @@
     padding: 1rem;
     border-bottom: 1px solid var(--color-border);
     color: var(--color-text);
-    font-size: 0.925rem;
+    font-size: var(--text-body);
 }
 
 .tabla-responsive tbody tr {
@@ -179,7 +182,7 @@
 }
 
 .modal-title {
-    font-size: 1.5rem;
+    font-size: var(--text-subtitle);
     font-weight: 700;
     margin: 0;
 }
@@ -221,7 +224,7 @@
 }
 
 .form-label {
-    font-size: 0.875rem;
+    font-size: var(--text-small);
     font-weight: 500;
     color: var(--color-text-secondary);
 }
@@ -236,7 +239,7 @@
     background-color: var(--color-bg-card);
     color: var(--color-text);
     font-family: inherit;
-    font-size: 0.95rem;
+    font-size: var(--text-body);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 

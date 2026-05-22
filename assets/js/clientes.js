@@ -194,19 +194,9 @@ async function eliminarCliente(id) {
  * Mostrar notificaciones
  */
 function mostrarExito(mensaje) {
-    console.log('✅', mensaje);
-    const div = document.createElement('div');
-    div.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fadeInUp';
-    div.textContent = mensaje;
-    document.body.appendChild(div);
-    setTimeout(() => div.remove(), 3000);
+    showToast(mensaje, 'success');
 }
 
 function mostrarError(mensaje) {
-    console.error('❌', mensaje);
-    const div = document.createElement('div');
-    div.className = 'fixed bottom-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fadeInUp';
-    div.textContent = mensaje;
-    document.body.appendChild(div);
-    setTimeout(() => div.remove(), 3000);
+    showToast(mensaje, 'error');
 }

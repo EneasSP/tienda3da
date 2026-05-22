@@ -30,28 +30,30 @@
                     },
                     colors: {
                         primary: {
-                            50: '#f1f5f9',
-                            100: '#e2e8f0',
-                            200: '#cbd5e1',
-                            300: '#94a3b8',
-                            400: '#64748b',
-                            500: '#475569',
-                            600: '#334155',
-                            700: '#1e2530',
-                            800: '#0f131a',
-                            900: '#0a0c10',
+                            50: 'var(--color-primary-50)',
+                            100: 'var(--color-primary-100)',
+                            200: 'var(--color-primary-200)',
+                            300: 'var(--color-primary-300)',
+                            400: 'var(--color-primary-400)',
+                            500: 'var(--color-primary)',
+                            600: 'var(--color-primary-600)',
+                            700: 'var(--color-primary-700)',
+                            800: 'var(--color-primary-800)',
+                            900: 'var(--color-primary-900)',
+                            DEFAULT: 'var(--color-primary)',
                         },
                         secondary: {
-                            50: '#fdfbf7',
-                            100: '#f5ede0',
-                            200: '#ebdcc5',
-                            300: '#e2c9a6',
-                            400: '#d8b787',
-                            500: '#c5a880',
-                            600: '#a88c64',
-                            700: '#8b714b',
-                            800: '#6f5734',
-                            900: '#543f20',
+                            50: 'var(--color-secondary-50)',
+                            100: 'var(--color-secondary-100)',
+                            200: 'var(--color-secondary-200)',
+                            300: 'var(--color-secondary-300)',
+                            400: 'var(--color-secondary-400)',
+                            500: 'var(--color-secondary)',
+                            600: 'var(--color-secondary-600)',
+                            700: 'var(--color-secondary-700)',
+                            800: 'var(--color-secondary-800)',
+                            900: 'var(--color-secondary-900)',
+                            DEFAULT: 'var(--color-secondary)',
                         }
                     }
                 }
@@ -70,12 +72,12 @@
 <body class="min-h-screen">
     <?php include 'includes/navbar.php'; ?>
     
-    <div class="container mx-auto p-4 md:p-8">
+    <main class="main-container">
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            <h1 class="page-title">
                 🏭 Gestión de Productos
             </h1>
-            <p class="text-gray-600 dark:text-gray-400">
+            <p class="body-text">
                 Crea, edita y gestiona los productos de impresión 3D
             </p>
         </div>
@@ -98,134 +100,132 @@
         </div>
 
         <!-- GRID DE PRODUCTOS -->
-        <div id="productosContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div id="productosContainer" class="grid-productos">
             <div class="text-center py-12">
                 <p class="text-gray-500">Cargando productos...</p>
             </div>
         </div>
-    </div>
+    </main>
 
     <!-- MODAL PRODUCTO -->
-    <div id="modalProducto" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div class="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div class="sticky top-0 bg-[var(--color-bg-card)] border-b border-[var(--color-border)] p-6 flex justify-between items-center">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white" id="modalProductoTitulo">
+    <div id="modalProducto" class="modal-backdrop hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalProductoTitulo">
                     Nuevo Producto
                 </h2>
-                <button onclick="cerrarModalProducto()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400">
+                <button onclick="cerrarModalProducto()" class="modal-close">
                     ✕
                 </button>
             </div>
 
-            <form id="formProducto" class="p-6 space-y-4" onsubmit="guardarProducto(event)">
-                <input type="hidden" id="productoId">
+            <form id="formProducto" onsubmit="guardarProducto(event)">
+                <div class="modal-body">
+                    <input type="hidden" id="productoId">
 
-                <div>
-                    <label class="form-label">
-                        Nombre del Producto *
-                    </label>
-                    <input 
-                        type="text" 
-                        id="productoNombre" 
-                        class="form-input"
-                        required
-                    >
-                </div>
-
-                <div>
-                    <label class="form-label">
-                        Descripción
-                    </label>
-                    <textarea 
-                        id="productoDescripcion" 
-                        rows="3"
-                        class="form-input"
-                    ></textarea>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
+                    <div class="form-group">
                         <label class="form-label">
-                            Peso (gramos) *
+                            Nombre del Producto *
                         </label>
                         <input 
-                            type="number" 
-                            id="productoPeso" 
-                            step="0.01"
-                            min="0.1"
+                            type="text" 
+                            id="productoNombre" 
                             class="form-input"
                             required
-                            onchange="recalcularCosto()"
                         >
                     </div>
 
-                    <div>
+                    <div class="form-group">
                         <label class="form-label">
-                            Tiempo (minutos) *
+                            Descripción
                         </label>
-                        <input 
-                            type="number" 
-                            id="productoTiempo" 
-                            step="1"
-                            min="1"
-                            class="form-input"
-                            required
-                            onchange="recalcularCosto()"
-                        >
+                        <textarea 
+                            id="productoDescripcion" 
+                            rows="3"
+                            class="form-textarea"
+                        ></textarea>
                     </div>
-                </div>
 
-                <!-- CALCULADOR COSTO EN VIVO -->
-                <div class="bg-secondary-50/30 dark:bg-secondary-900/10 border border-secondary-200/60 dark:border-secondary-900/40 rounded-lg p-4">
-                    <h3 class="font-semibold text-secondary-900 dark:text-secondary-300 mb-3">
-                        💰 Cálculo de Costo
-                    </h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">
+                                Peso (gramos) *
+                            </label>
+                            <input 
+                                type="number" 
+                                id="productoPeso" 
+                                step="0.01"
+                                min="0.1"
+                                class="form-input"
+                                required
+                                onchange="recalcularCosto()"
+                            >
+                        </div>
 
-                    <div id="costoDesglose" class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                        <div class="flex justify-between">
-                            <span>Costo Filamento (PLA):</span>
-                            <span class="font-mono" id="costoPLA">$0.00</span>
+                        <div class="form-group">
+                            <label class="form-label">
+                                Tiempo (minutos) *
+                            </label>
+                            <input 
+                                type="number" 
+                                id="productoTiempo" 
+                                step="1"
+                                min="1"
+                                class="form-input"
+                                required
+                                onchange="recalcularCosto()"
+                            >
                         </div>
-                        <div class="flex justify-between">
-                            <span>Costo Energía (Luz):</span>
-                            <span class="font-mono" id="costoLuz">$0.00</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Costo Máquina (Horas):</span>
-                            <span class="font-mono" id="costoMaquina">$0.00</span>
-                        </div>
-                        <div class="border-t border-secondary-200/60 dark:border-secondary-900/40 pt-2 mt-2">
-                            <div class="flex justify-between font-semibold text-secondary-900 dark:text-secondary-300">
+                    </div>
+
+                    <!-- CALCULADOR COSTO EN VIVO -->
+                    <div class="costo-box">
+                        <h3 class="font-semibold mb-3" style="color: var(--color-text)">
+                            💰 Cálculo de Costo
+                        </h3>
+
+                        <div id="costoDesglose">
+                            <div class="costo-item">
+                                <span class="costo-item-label">Costo Filamento (PLA):</span>
+                                <span class="costo-item-valor" id="costoPLA">$0.00</span>
+                            </div>
+                            <div class="costo-item">
+                                <span class="costo-item-label">Costo Energía (Luz):</span>
+                                <span class="costo-item-valor" id="costoLuz">$0.00</span>
+                            </div>
+                            <div class="costo-item">
+                                <span class="costo-item-label">Costo Máquina (Horas):</span>
+                                <span class="costo-item-valor" id="costoMaquina">$0.00</span>
+                            </div>
+                            <div class="costo-total">
                                 <span>COSTO TOTAL:</span>
-                                <span class="font-mono" id="costoTotal">$0.00</span>
+                                <span id="costoTotal">$0.00</span>
                             </div>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Ganancia (50%):</span>
-                            <span class="font-mono text-green-600 dark:text-green-400 font-semibold" id="costoGanancia">$0.00</span>
-                        </div>
-                        <div class="border-t border-secondary-200/60 dark:border-secondary-900/40 pt-2 mt-2">
-                            <div class="flex justify-between font-bold text-lg text-amber-600 dark:text-amber-400">
+                            <div class="costo-item">
+                                <span class="costo-item-label">Ganancia Estimada:</span>
+                                <span class="costo-item-valor" style="color: var(--color-success)" id="costoGanancia">$0.00</span>
+                            </div>
+                            <div class="costo-precio">
                                 <span>PRECIO VENTA:</span>
-                                <span class="font-mono" id="costoVenta">$0.00</span>
+                                <span id="costoVenta">$0.00</span>
                             </div>
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Imagen (URL)
+                        </label>
+                        <input 
+                            type="text" 
+                            id="productoImagen" 
+                            placeholder="https://ejemplo.com/imagen.jpg"
+                            class="form-input"
+                        >
+                    </div>
                 </div>
 
-                <div>
-                    <label class="form-label">
-                        Imagen (URL)
-                    </label>
-                    <input 
-                        type="text" 
-                        id="productoImagen" 
-                        placeholder="https://ejemplo.com/imagen.jpg"
-                        class="form-input"
-                    >
-                </div>
-
-                <div class="flex gap-4 pt-4 border-t border-[var(--color-border)]">
+                <div class="modal-footer">
                     <button 
                         type="submit" 
                         class="flex-1 btn btn-primary"

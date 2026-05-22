@@ -136,3 +136,71 @@ window.addEventListener('popstate', () => {
         switchTab(getTabFromUrl());
     }
 });
+
+/**
+ * Escapa HTML para prevenir XSS
+ * @param {string} text - Texto a escapar
+ * @returns {string} Texto escapado
+ */
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+/**
+ * Muestra una notificación toast
+ * @param {string} message - Mensaje
+ * @param {string} type - Tipo (success, error, warning)
+ * @param {string} title - Título (opcional)
+ */
+function showToast(message, type = 'info', title = '') {
+    const container = document.getElementById('toast-container') || createToastContainer();
+    
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    const icons = {
+        success: '✅',
+        error: '❌',
+        warning: '⚠️',
+        info: 'ℹ️'
+    };
+    
+    const titles = {
+        success: 'Éxito',
+        error: 'Error',
+        warning: 'Advertencia',
+        info: 'Información'
+    };
+    
+    toast.innerHTML = `
+        <span class="toast-icon">${icons[type]}</span>
+        <div class="toast-content">
+            <div class="toast-title">${title || titles[type]}</div>
+            <div class="toast-message">${escapeHtml(message)}</div>
+        </div>
+    `;
+    
+    container.appendChild(toast);
+    
+    // Auto-remover después de 5 segundos
+    setTimeout(() => {
+        toast.style.animation = 'slideIn 0.3s ease reverse';
+        setTimeout(() => toast.remove(), 300);
+    }, 5000);
+}
+
+/**
+ * Crea el contenedor de toasts si no existe
+ * @returns {HTMLElement}
+ */
+function createToastContainer() {
+    const container = document.createElement('div');
+    container.id = 'toast-container';
+    container.className = 'toast-container';
+    document.body.appendChild(container);
+    return container;
+}
+
