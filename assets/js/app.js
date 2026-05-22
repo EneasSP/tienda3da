@@ -299,10 +299,19 @@ function renderizarPedidos() {
             <td><strong>${formatCurrency(pedido.total)}</strong></td>
             <td><span class="badge badge-${pedido.estado}">${pedido.estado}</span></td>
             <td>
-                <div class="table-actions">
-                    <button class="action-btn" onclick="verPedido(${pedido.id})" title="Ver detalles">👁️</button>
-                    <button class="action-btn" onclick="editarEstadoPedido(${pedido.id})" title="Cambiar estado">✏️</button>
-                    <button class="action-btn danger" onclick="eliminarPedido(${pedido.id})" title="Eliminar">🗑️</button>
+                <div class="flex gap-2">
+                    <button class="action-link" onclick="verPedido(${pedido.id})" title="Ver detalles">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <span>Detalles</span>
+                    </button>
+                    <button class="action-link" onclick="editarEstadoPedido(${pedido.id})" title="Cambiar estado">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                        <span>Estado</span>
+                    </button>
+                    <button class="action-link danger" onclick="eliminarPedido(${pedido.id})" title="Eliminar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                        <span>Eliminar</span>
+                    </button>
                 </div>
             </td>
         </tr>
@@ -757,12 +766,12 @@ function renderizarProductos() {
         }
         
         return `
-            <div class="product-card flex flex-col h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-secondary-500/30">
+            <div class="product-card flex flex-col h-full">
                 ${imageHtml}
                 <div class="product-content p-5 flex flex-col flex-1">
-                    <h4 class="product-name font-bold text-lg mb-2 text-gray-800 dark:text-gray-100">${escapeHtml(producto.nombre)}</h4>
-                    <p class="product-description text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-3 flex-1">${escapeHtml(producto.descripcion || 'Sin descripción')}</p>
-                    <div class="product-meta grid grid-cols-2 gap-2 text-xs font-medium text-gray-400 dark:text-gray-500 border-t border-b border-gray-100/10 dark:border-gray-800 py-3 mb-4">
+                    <h4 class="product-name font-bold text-lg mb-2 text-slate-900 dark:text-slate-100">${escapeHtml(producto.nombre)}</h4>
+                    <p class="product-description text-sm text-slate-600 dark:text-slate-400 mb-4 line-clamp-3 flex-1">${escapeHtml(producto.descripcion || 'Sin descripción')}</p>
+                    <div class="product-meta grid grid-cols-2 gap-2 text-xs font-medium text-slate-500 dark:text-slate-450 border-t border-b border-slate-100/10 dark:border-slate-800 py-3 mb-4">
                         <div class="flex items-center gap-1.5 justify-center py-1 bg-slate-500/5 dark:bg-white/5 rounded-md">
                             <span>⚖️</span> <span>${producto.peso_gramos} g</span>
                         </div>
@@ -771,8 +780,8 @@ function renderizarProductos() {
                         </div>
                     </div>
                     <div class="flex items-center justify-between mt-auto pt-2">
-                        <span class="text-xs uppercase tracking-wider font-semibold text-gray-400 dark:text-gray-500">Precio Sugerido</span>
-                        <span class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-amber-500 dark:from-amber-300 dark:to-amber-400">${formatCurrency(precioVenta)}</span>
+                        <span class="text-xs uppercase tracking-wider font-bold text-slate-500 dark:text-slate-400">Precio Sugerido</span>
+                        <span class="text-xl font-extrabold text-slate-900 dark:text-amber-400">${formatCurrency(precioVenta)}</span>
                     </div>
                 </div>
             </div>

@@ -96,12 +96,14 @@ function renderizarProductos(productos) {
                     </div>
                 </div>
                 
-                <div class="flex gap-2">
-                    <button onclick="editarProducto(${prod.id})" class="flex-1 px-3 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-850 dark:hover:bg-slate-750 text-slate-800 dark:text-slate-200 text-sm font-semibold rounded transition">
-                        ✏️ Editar
+                <div class="flex gap-4 border-t border-slate-100/10 dark:border-slate-800 pt-3 mt-3">
+                    <button onclick="editarProducto(${prod.id})" class="action-link flex-1">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                        <span>Editar</span>
                     </button>
-                    <button onclick="eliminarProducto(${prod.id})" class="flex-1 px-3 py-2 bg-red-50 hover:bg-red-100 dark:bg-red-950/20 dark:hover:bg-red-950/40 text-red-600 dark:text-red-400 text-sm font-semibold rounded transition">
-                        🗑️ Eliminar
+                    <button onclick="eliminarProducto(${prod.id})" class="action-link danger flex-1">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                        <span>Eliminar</span>
                     </button>
                 </div>
             </div>

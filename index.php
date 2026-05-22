@@ -127,7 +127,8 @@
                         
                         <!-- Botón nuevo pedido -->
                         <button id="nuevo-pedido-btn" class="btn btn-primary">
-                            ➕ Nuevo Pedido
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                            <span>Nuevo Pedido</span>
                         </button>
                     </div>
                 </div>
@@ -241,7 +242,9 @@
                                 <option value="">Seleccionar producto...</option>
                             </select>
                             <input type="number" id="cantidad-input" class="form-input w-24" value="1" min="1" placeholder="Cant.">
-                            <button type="button" id="agregar-producto-btn" class="btn btn-secondary">➕</button>
+                            <button type="button" id="agregar-producto-btn" class="btn btn-secondary" title="Agregar producto">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                            </button>
                         </div>
                     </div>
                     
